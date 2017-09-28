@@ -29,11 +29,11 @@ RSpec.describe UsersController, type: :controller do
   # User. As you add validations to User, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {name: 'Bill', email: 'bill@gates.com', password:'iamrich'}
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {name: '', email: 'bill@gates.com', password:'iamrich'}
   }
 
   # This should return the minimal set of values that should be in the session
@@ -97,14 +97,25 @@ RSpec.describe UsersController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {name: 'Steve', email: 'steve@jobs.com', password:'iamdead'}
       }
 
-      it "updates the requested user" do
+      it "updates the requested user for html" do
         user = User.create! valid_attributes
-        put :update, params: {id: user.to_param, user: new_attributes}, session: valid_session
+        put :update, params: {id: user.to_param, user: new_attributes}, session: valid_session, format: 'html'
+        expect(response).to redirect_to(user)
+				user.name.should eq(valid_attributes.fetch(:name))
         user.reload
-        skip("Add assertions for updated state")
+				user.name.should eq(new_attributes.fetch(:name))
+      end
+      
+      it "updates the requested user for json" do
+        user = User.create! valid_attributes
+        put :update, params: {id: user.to_param, user: new_attributes}, session: valid_session, format: 'json'
+        expect(response).to be_success
+				user.name.should eq(valid_attributes.fetch(:name))
+        user.reload
+				user.name.should eq(new_attributes.fetch(:name))
       end
 
       it "redirects to the user" do
