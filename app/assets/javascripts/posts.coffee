@@ -7,7 +7,7 @@ $.ajaxSetup({
 })
 
 $.fn.clear_form_errors = () ->
-  this.find('.field').removeClass('has-error')	
+  this.find('.form-group').removeClass('has-error')	
   $(this.selector).find('span.help-block').each (i,elem)->
     elem.remove()
 
@@ -32,12 +32,13 @@ $.fn.render_form_errors = (model_name, errors) ->
     input.parent().append('<span class="help-block">' + $.map(messages, (m) -> m.charAt(0).toUpperCase() + m.slice(1)).join('<br />') + '</span>')
   )
 
+form_selector = "#new_post"
 
 listener = ()->
-  $("#post_form").on("ajax:success", (e, data, status, xhr) ->
-    $("#post_form").html("<div>post is been created successfully</div>")
+  $(form_selector).on("ajax:success", (e, data, status, xhr) ->
+    $(form_selector).html("<div>post is been created successfully</div>")
   ).on("ajax:error", (e, data, status, xhr) ->
-    $("#post_form").render_form_errors('post', e.originalEvent.detail[0])
+    $(form_selector).render_form_errors('post', e.originalEvent.detail[0])
   )
 
 $(document).on "ready", () ->
